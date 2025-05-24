@@ -1,0 +1,6 @@
+@reservas_backend_HostAddress = http://localhost:5083
+
+GET {{reservas_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
