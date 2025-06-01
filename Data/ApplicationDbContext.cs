@@ -10,6 +10,9 @@ namespace ReservasBackend.Data
         {
         }
 
+
         public DbSet<Usuario> Usuarios { get; set; } = null!;
+        public DbSet<Disponibilidad> Disponibilidades { get; set; } = null!;
     }
+    
 }

@@ -22,15 +22,23 @@ namespace ReservasBackend.Repositories
         public async Task AddUserAsync(Usuario usuario)
         {
             await _context.Usuarios.AddAsync(usuario);
-        }
 
+        }
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
         public async Task<List<Usuario>> GetAllUsersAsync()
         {
-        return await _context.Usuarios.ToListAsync();
+            return await _context.Usuarios.ToListAsync();
         }
+
+        public async Task<Usuario?> GetByEmailAsync(string email)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+
+        
     }
 }

@@ -1,6 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ReservasBackend.Dtos;
 using ReservasBackend.Services;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ReservasBackend.Controllers
 {
@@ -15,26 +21,24 @@ namespace ReservasBackend.Controllers
             _userService = userService;
         }
 
-        [HttpPost("registro")]
-        public async Task<IActionResult> Registro([FromBody] RegistroDto dto)
+        [HttpPost("login")]
+            public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        var (success, message, token) = await _userService.LoginAsync(dto);
 
-            var (Success, Message) = await _userService.RegisterAsync(dto);
+        if (!success)
+        return Unauthorized(new { success = false, message });
 
-            if (!Success)
-                return BadRequest(new { mensaje = Message });
-
-            return Ok(new { mensaje = Message });
+        return Ok(new { success = true, message, token });
         }
 
-        // Método GET para probar que el controlador funciona
-       [HttpGet("usuarios")]
-        public async Task<IActionResult> GetUsuarios()
-            {
-                var usuarios = await _userService.GetAllAsync();
-                 return Ok(usuarios);
-            }
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegistroDto dto)
+        {
+            var (success, message) = await _userService.RegisterAsync(dto);
+            if (!success)
+                return BadRequest(new { success = false, message });
+            return Ok(new { success = true, message });
+        }
     }
 }

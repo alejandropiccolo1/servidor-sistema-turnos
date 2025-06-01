@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReservasBackend.Data;
 
@@ -11,9 +12,11 @@ using ReservasBackend.Data;
 namespace reservas_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250530125835_CreateDisponibilidadesTable")]
+    partial class CreateDisponibilidadesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,9 +45,6 @@ namespace reservas_backend.Migrations
 
                     b.Property<DateTime>("FechaHoraInicio")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("PacienteId")
-                        .HasColumnType("int");
 
                     b.Property<int>("ProfesionalId")
                         .HasColumnType("int");
