@@ -9,7 +9,7 @@ namespace reservabackend.Models
         public string PasswordHash { get; set; } = null!;
         public string Rol { get; set; } = "paciente";
         public string Especialidad { get; set; } = null!;
-       public ICollection<Disponibilidad> ?DisponibilidadesComoProfesional { get; set; }
-        public ICollection<Disponibilidad> ?DisponibilidadesComoPaciente { get; set; }
+       public ICollection<Disponibilidad> DisponibilidadesComoProfesional { get; set; } = new List<Disponibilidad>();
+        public ICollection<Disponibilidad> DisponibilidadesComoPaciente { get; set; } = new List<Disponibilidad>();
     }
 }

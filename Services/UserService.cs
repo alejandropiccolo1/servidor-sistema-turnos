@@ -38,7 +38,6 @@ namespace ReservasBackend.Services
                 PasswordHash = hashedPassword,
                 Rol = dto.Rol,
                 Especialidad = dto.Especialidad
-                
             };
 
             await _userRepository.AddUserAsync(usuario);
@@ -52,14 +51,13 @@ namespace ReservasBackend.Services
             return await _userRepository.GetAllUsersAsync();
         }
 
-        public async Task<(bool Success, string Message, string Token)> LoginAsync(LoginDto dto)
+        public async Task<(bool Success, string Message, string? Token)> LoginAsync(LoginDto dto)
         {
             var usuario = await _userRepository.GetByEmailAsync(dto.Email);
 
             if (usuario == null)
                 return (false, "Usuario o contraseña incorrectos", null);
 
-            Console.WriteLine($"Especialidad desde BD: {usuario.Especialidad}");    
             using var sha256 = SHA256.Create();
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(dto.Contraseña));
             var hashedPassword = Convert.ToBase64String(hashedBytes);
@@ -67,7 +65,7 @@ namespace ReservasBackend.Services
             if (usuario.PasswordHash != hashedPassword)
                 return (false, "Usuario o contraseña incorrectos", null);
 
-            // ✅ Generar el token JWT
+            // Generar el token JWT
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_jwtSecret);
 
@@ -79,9 +77,8 @@ namespace ReservasBackend.Services
                     new Claim(ClaimTypes.Name, usuario.Nombre),
                     new Claim("apellido", usuario.Apellido ?? ""),
                     new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim(ClaimTypes.Role, usuario.Rol ?? "Usuario"), // Rol por defecto
+                    new Claim(ClaimTypes.Role, usuario.Rol ?? "Usuario"),
                     new Claim("Especialidad", usuario.Especialidad ?? "")
-                   
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

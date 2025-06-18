@@ -21,13 +21,14 @@ namespace ReservasBackend.Repositories
             .Include(d => d.Paciente)
             .ToListAsync();        }
 
-        public async Task<Disponibilidad> ObtenerPorIdAsync(int id)
+        public async Task<Disponibilidad?> ObtenerPorIdAsync(int id)
         {
-             return await _context.Disponibilidades
-                .Include(d => d.Profesional)
-                .Include(d => d.Paciente)
-                .FirstOrDefaultAsync(d => d.Id == id);
-        }
+     return await _context.Disponibilidades
+        .Include(d => d.Profesional)
+        .Include(d => d.Paciente)
+        .FirstOrDefaultAsync(d => d.Id == id);
+    }
+
 
         public async Task AgregarAsync(Disponibilidad disponibilidad)
         {
