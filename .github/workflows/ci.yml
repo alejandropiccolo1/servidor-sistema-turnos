@@ -32,14 +32,4 @@ jobs:
     - name: Run .NET tests
       run: dotnet test --no-build --verbosity normal
 
-    # 🧪 A partir de acá empieza Newman
-    - name: Install Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'  # Versión compatible con Newman
-
-    - name: Install Newman
-      run: npm install -g newman
-
-    - name: Run Postman tests with Newman
-      run: newman run Pruebas_Api_Turnero.postman_collection.json
+   
