@@ -3,11 +3,11 @@ name: CI Backend
 on:
   push:
     branches:
-      - develop
+      - desarrollo-alejandro
       - main
   pull_request:
     branches:
-      - develop
+      - desarrollo-alejandro
       - main
 
 jobs:
@@ -21,9 +21,13 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.x'  # Cambia si usás otra versión
+        dotnet-version: '7.0.x'  # Cambiar según tu versión
 
     - name: Restore dependencies
       run: dotnet restore
 
-    - name:
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
