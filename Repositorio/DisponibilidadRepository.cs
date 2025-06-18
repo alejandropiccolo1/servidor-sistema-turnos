@@ -12,16 +12,21 @@ namespace ReservasBackend.Repositories
         {
             _context = context;
         }
-        
+
 
         public async Task<IEnumerable<Disponibilidad>> ObtenerTodasAsync()
         {
-            return await _context.Disponibilidades.ToListAsync();
-        }
+            return await _context.Disponibilidades
+            .Include(d => d.Profesional)
+            .Include(d => d.Paciente)
+            .ToListAsync();        }
 
         public async Task<Disponibilidad> ObtenerPorIdAsync(int id)
         {
-            return await _context.Disponibilidades.FindAsync(id);
+             return await _context.Disponibilidades
+                .Include(d => d.Profesional)
+                .Include(d => d.Paciente)
+                .FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task AgregarAsync(Disponibilidad disponibilidad)
@@ -33,20 +38,20 @@ namespace ReservasBackend.Repositories
         public async Task ActualizarAsync(Disponibilidad disponibilidad)
         {
             var disponibilidadExistente = await _context.Disponibilidades.FindAsync(disponibilidad.Id);
-        if (disponibilidadExistente == null)
-        {
-        throw new Exception("Disponibilidad no encontrada");
-         }
+            if (disponibilidadExistente == null)
+            {
+                throw new Exception("Disponibilidad no encontrada");
+            }
 
-        // Actualizar solo los campos que pueden cambiar:
-        disponibilidadExistente.Duracion = disponibilidad.Duracion;
-        disponibilidadExistente.Estado = disponibilidad.Estado;
-        disponibilidadExistente.FechaHoraInicio = disponibilidad.FechaHoraInicio;
-        disponibilidadExistente.FechaHoraFin = disponibilidad.FechaHoraFin;
+            // Actualizar solo los campos que pueden cambiar:
+            disponibilidadExistente.Duracion = disponibilidad.Duracion;
+            disponibilidadExistente.Estado = disponibilidad.Estado;
+            disponibilidadExistente.FechaHoraInicio = disponibilidad.FechaHoraInicio;
+            disponibilidadExistente.FechaHoraFin = disponibilidad.FechaHoraFin;
 
-        // No modifiques el ProfesionalId ni el Id aquí (salvo que sea estrictamente necesario)
+            // No modifiques el ProfesionalId ni el Id aquí (salvo que sea estrictamente necesario)
 
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task EliminarAsync(int id)
@@ -77,6 +82,35 @@ namespace ReservasBackend.Repositories
                     (inicio <= d.FechaHoraInicio && fin >= d.FechaHoraFin)
                 )
             );
+        }
+
+        public async Task<IEnumerable<Disponibilidad>> ObtenerDisponiblesAsync()
+        {
+            return await _context.Disponibilidades
+                             .Where(d => d.Estado == "Disponible")
+                             .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Disponibilidad>> ObtenerPorPacienteAsync(int pacienteId)
+        {
+            return await _context.Disponibilidades
+            .Where(d => d.PacienteId == pacienteId)
+            .ToListAsync();
+        }
+        public async Task<bool> ReservarTurnoAsync(int disponibilidadId, int pacienteId)
+        {
+            var disponibilidad = await _context.Disponibilidades.FindAsync(disponibilidadId);
+
+            if (disponibilidad == null || disponibilidad.Estado != "Disponible")
+                return false;
+
+            disponibilidad.Estado = "Reservado";
+            disponibilidad.PacienteId = pacienteId;
+
+            _context.Disponibilidades.Update(disponibilidad);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

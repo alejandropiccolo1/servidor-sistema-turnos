@@ -21,24 +21,31 @@ namespace ReservasBackend.Controllers
             _userService = userService;
         }
 
-        [HttpPost("login")]
-            public async Task<IActionResult> Login([FromBody] LoginDto dto)
-        {
-        var (success, message, token) = await _userService.LoginAsync(dto);
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegistroDto dto)
+    {
+    if (!ModelState.IsValid)
+        return BadRequest(ModelState);
 
-        if (!success)
+    var (success, message) = await _userService.RegisterAsync(dto);
+    if (!success)
+        return BadRequest(new { success = false, message });
+
+    return Ok(new { success = true, message });
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    {   
+    if (!ModelState.IsValid)
+        return BadRequest(ModelState);
+
+    var (success, message, token) = await _userService.LoginAsync(dto);
+
+    if (!success)
         return Unauthorized(new { success = false, message });
 
-        return Ok(new { success = true, message, token });
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistroDto dto)
-        {
-            var (success, message) = await _userService.RegisterAsync(dto);
-            if (!success)
-                return BadRequest(new { success = false, message });
-            return Ok(new { success = true, message });
-        }
+    return Ok(new { success = true, message, token });
+    }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReservasBackend.Data;
 
@@ -11,9 +12,11 @@ using ReservasBackend.Data;
 namespace reservas_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250609163013_NuevaMigracionInicial")]
+    partial class NuevaMigracionInicial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,10 +53,6 @@ namespace reservas_backend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PacienteId");
-
-                    b.HasIndex("ProfesionalId");
 
                     b.ToTable("Disponibilidades");
                 });
@@ -93,31 +92,6 @@ namespace reservas_backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
-                });
-
-            modelBuilder.Entity("reservabackend.Models.Disponibilidad", b =>
-                {
-                    b.HasOne("reservabackend.Models.Usuario", "Paciente")
-                        .WithMany("DisponibilidadesComoPaciente")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("reservabackend.Models.Usuario", "Profesional")
-                        .WithMany("DisponibilidadesComoProfesional")
-                        .HasForeignKey("ProfesionalId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Paciente");
-
-                    b.Navigation("Profesional");
-                });
-
-            modelBuilder.Entity("reservabackend.Models.Usuario", b =>
-                {
-                    b.Navigation("DisponibilidadesComoPaciente");
-
-                    b.Navigation("DisponibilidadesComoProfesional");
                 });
 #pragma warning restore 612, 618
         }

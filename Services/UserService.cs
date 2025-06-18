@@ -38,6 +38,7 @@ namespace ReservasBackend.Services
                 PasswordHash = hashedPassword,
                 Rol = dto.Rol,
                 Especialidad = dto.Especialidad
+                
             };
 
             await _userRepository.AddUserAsync(usuario);
@@ -80,6 +81,7 @@ namespace ReservasBackend.Services
                     new Claim(ClaimTypes.Email, usuario.Email),
                     new Claim(ClaimTypes.Role, usuario.Rol ?? "Usuario"), // Rol por defecto
                     new Claim("Especialidad", usuario.Especialidad ?? "")
+                   
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

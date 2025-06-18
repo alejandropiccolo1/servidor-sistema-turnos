@@ -11,6 +11,10 @@ namespace ReservasBackend.Repositories
         Task EliminarAsync(int id);
         Task<IEnumerable<Disponibilidad>> ObtenerPorProfesionalAsync(int profesionalId);
         Task<bool> ExisteSolapamientoAsync(DateTime inicio, DateTime fin, int profesionalId);
+        Task<IEnumerable<Disponibilidad>> ObtenerDisponiblesAsync();
+        Task<IEnumerable<Disponibilidad>> ObtenerPorPacienteAsync(int pacienteId);
+        Task<bool> ReservarTurnoAsync(int disponibilidadId, int pacienteId);
+
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReservasBackend.Data;
 
@@ -11,9 +12,11 @@ using ReservasBackend.Data;
 namespace reservas_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250607183410_CrearModelosProfesionalYPaciente")]
+    partial class CrearModelosProfesionalYPaciente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +61,52 @@ namespace reservas_backend.Migrations
                     b.ToTable("Disponibilidades");
                 });
 
+            modelBuilder.Entity("reservabackend.Models.Paciente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ObraSocial")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Pacientes");
+                });
+
+            modelBuilder.Entity("reservabackend.Models.Profesional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Especialidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Matricula")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Profesionales");
+                });
+
             modelBuilder.Entity("reservabackend.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -97,27 +146,47 @@ namespace reservas_backend.Migrations
 
             modelBuilder.Entity("reservabackend.Models.Disponibilidad", b =>
                 {
-                    b.HasOne("reservabackend.Models.Usuario", "Paciente")
-                        .WithMany("DisponibilidadesComoPaciente")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.HasOne("reservabackend.Models.Paciente", null)
+                        .WithMany("TurnosReservados")
+                        .HasForeignKey("PacienteId");
 
-                    b.HasOne("reservabackend.Models.Usuario", "Profesional")
-                        .WithMany("DisponibilidadesComoProfesional")
+                    b.HasOne("reservabackend.Models.Profesional", null)
+                        .WithMany("Disponibilidades")
                         .HasForeignKey("ProfesionalId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Paciente");
-
-                    b.Navigation("Profesional");
                 });
 
-            modelBuilder.Entity("reservabackend.Models.Usuario", b =>
+            modelBuilder.Entity("reservabackend.Models.Paciente", b =>
                 {
-                    b.Navigation("DisponibilidadesComoPaciente");
+                    b.HasOne("reservabackend.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("DisponibilidadesComoProfesional");
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("reservabackend.Models.Profesional", b =>
+                {
+                    b.HasOne("reservabackend.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("reservabackend.Models.Paciente", b =>
+                {
+                    b.Navigation("TurnosReservados");
+                });
+
+            modelBuilder.Entity("reservabackend.Models.Profesional", b =>
+                {
+                    b.Navigation("Disponibilidades");
                 });
 #pragma warning restore 612, 618
         }

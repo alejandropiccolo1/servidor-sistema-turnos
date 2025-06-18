@@ -7,7 +7,7 @@ namespace ReservasBackend.Dtos
         public string Email { get; set; } = null!;
         public string Contraseña { get; set; } = null!;
         public string Rol { get; set; } = "paciente"; //valor por defectos
-        public string Especialidad { get; set; } = null!;
-
+        public string? Especialidad { get; set; } 
+         
     }
 }

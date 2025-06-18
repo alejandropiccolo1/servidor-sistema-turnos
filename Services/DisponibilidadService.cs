@@ -7,6 +7,7 @@ namespace ReservasBackend.Services
     {
         private readonly IDisponibilidadRepository _repositorio;
 
+
         public DisponibilidadService(IDisponibilidadRepository repositorio)
         {
             _repositorio = repositorio;
@@ -44,29 +45,29 @@ namespace ReservasBackend.Services
             await _repositorio.AgregarAsync(disponibilidad);
             return true;
         }
-    
+
         public async Task<bool> ActualizarDisponibilidadAsync(Disponibilidad disponibilidad)
         {
-        var existente = await _repositorio.ObtenerPorIdAsync(disponibilidad.Id);
-        if (existente == null)
-        return false;
+            var existente = await _repositorio.ObtenerPorIdAsync(disponibilidad.Id);
+            if (existente == null)
+                return false;
 
-        // Validar que solo se pueda modificar si está Disponible
-        if (existente.Estado != "Disponible")
-        return false;
+            // Validar que solo se pueda modificar si está Disponible
+            if (existente.Estado != "Disponible")
+                return false;
 
-        // Validar fechas
-        if (disponibilidad.FechaHoraInicio >= disponibilidad.FechaHoraFin)
-        return false;
-        existente.Duracion = disponibilidad.Duracion;
-        existente.Estado = disponibilidad.Estado;
-        existente.FechaHoraInicio = disponibilidad.FechaHoraInicio;
-        existente.FechaHoraFin = disponibilidad.FechaHoraFin;
+            // Validar fechas
+            if (disponibilidad.FechaHoraInicio >= disponibilidad.FechaHoraFin)
+                return false;
+            existente.Duracion = disponibilidad.Duracion;
+            existente.Estado = disponibilidad.Estado;
+            existente.FechaHoraInicio = disponibilidad.FechaHoraInicio;
+            existente.FechaHoraFin = disponibilidad.FechaHoraFin;
 
-     // Podrías agregar aquí validación de solapamientos si quieres
+            // Podrías agregar aquí validación de solapamientos si quieres
 
-        await _repositorio.ActualizarAsync(disponibilidad);
-        return true;
+            await _repositorio.ActualizarAsync(existente);
+            return true;
         }
 
 
@@ -83,7 +84,7 @@ namespace ReservasBackend.Services
             if (disponibilidad == null || disponibilidad.Estado != "Disponible")
                 return false;
 
-            disponibilidad.Estado = "Ocupado";
+            disponibilidad.Estado = "Reservado";
             disponibilidad.PacienteId = pacienteId; // Asegurate de que exista este campo en el modelo
             await _repositorio.ActualizarAsync(disponibilidad);
             return true;
@@ -92,7 +93,7 @@ namespace ReservasBackend.Services
         public async Task<bool> CancelarTurnoAsync(int disponibilidadId)
         {
             var disponibilidad = await _repositorio.ObtenerPorIdAsync(disponibilidadId);
-            if (disponibilidad == null || disponibilidad.Estado != "Ocupado")
+            if (disponibilidad == null || disponibilidad.Estado != "Reservado")
                 return false;
 
             disponibilidad.Estado = "Disponible";
@@ -100,5 +101,23 @@ namespace ReservasBackend.Services
             await _repositorio.ActualizarAsync(disponibilidad);
             return true;
         }
+        public async Task<int> ContarTurnosDisponiblesAsync(int profesionalId)
+        {
+            var turnos = await _repositorio.ObtenerPorProfesionalAsync(profesionalId);
+            return turnos.Count(t => t.Estado == "Disponible");
+        }
+
+        public async Task<IEnumerable<Disponibilidad>> ObtenerDisponiblesAsync()
+        {
+            return await _repositorio.ObtenerDisponiblesAsync();
+        }
+        
+        public async Task<IEnumerable<Disponibilidad>> ObtenerPorPacienteAsync(int pacienteId)
+    {
+    // Aquí necesitas que el repositorio tenga el método correspondiente, que devuelva la lista filtrada por pacienteId
+    return await _repositorio.ObtenerPorPacienteAsync(pacienteId);
+    }
+
+       
     }
 }

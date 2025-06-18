@@ -13,5 +13,9 @@ namespace ReservasBackend.Services
         Task<IEnumerable<Disponibilidad>> ObtenerPorProfesionalAsync(int profesionalId);
         Task<bool> ReservarTurnoAsync(int disponibilidadId, int pacienteId);
         Task<bool> CancelarTurnoAsync(int disponibilidadId);
+        Task<int> ContarTurnosDisponiblesAsync(int profesionalId);
+        Task<IEnumerable<Disponibilidad>> ObtenerDisponiblesAsync();
+        Task<IEnumerable<Disponibilidad>> ObtenerPorPacienteAsync(int pacienteId);
+    
     }
 }

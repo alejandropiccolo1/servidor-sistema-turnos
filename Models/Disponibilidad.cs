@@ -12,10 +12,12 @@ namespace reservabackend.Models
         public int Duracion { get; set; }  // Duración en minutos (ej: 30)
 
         public int ProfesionalId { get; set; }  // FK al profesional que creó el turno (si aplica)
-
+        public Usuario? Profesional { get; set; }
         // Podrías agregar estado, por ejemplo: Disponible, Reservado, Cancelado
         public string Estado { get; set; } = "Disponible";
         public int? PacienteId { get; set; }
+        public Usuario? Paciente { get; set; }
+
     }
 
 
