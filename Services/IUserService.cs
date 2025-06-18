@@ -8,7 +8,7 @@ namespace ReservasBackend.Services
     public interface IUserService
     {
         Task<(bool Success, string Message)> RegisterAsync(RegistroDto dto); //registro
-        Task<List<Usuario>> GetAllAsync(); // obtener usuarios 
+        Task<List<Usuario?>> GetAllAsync(); // obtener usuarios 
         Task<(bool Success, string Message, string? Token)> LoginAsync(LoginDto dto);
     }
 }
