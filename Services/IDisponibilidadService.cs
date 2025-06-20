@@ -1,4 +1,5 @@
 using reservabackend.Models;
+using ReservasBackend.Dtos;
 using ReservasBackend.Repositories;
 
 namespace ReservasBackend.Services
@@ -14,7 +15,7 @@ namespace ReservasBackend.Services
         Task<bool> ReservarTurnoAsync(int disponibilidadId, int pacienteId);
         Task<bool> CancelarTurnoAsync(int disponibilidadId);
         Task<int> ContarTurnosDisponiblesAsync(int profesionalId);
-        Task<IEnumerable<Disponibilidad>> ObtenerDisponiblesAsync();
+        Task<List<DisponibilidadDto>> ObtenerDisponiblesAsync();
         Task<IEnumerable<Disponibilidad>> ObtenerPorPacienteAsync(int pacienteId);
     
     }

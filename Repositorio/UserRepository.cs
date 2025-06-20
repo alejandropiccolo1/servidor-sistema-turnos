@@ -38,7 +38,7 @@ namespace ReservasBackend.Repositories
             return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-
+        public async Task<Usuario> GetById(int userId) => await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == userId);
         
     }
 }

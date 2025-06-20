@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "61d04da9-2a17-4bad-a241-ba6a5774a352",
+		"name": "Pruebas_Api_Turnero",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45107124",
+		"_collection_link": "https://alejandropiccolo.postman.co/workspace/Alejandro-Piccolo's-Workspace~ccbe36d2-bf17-419a-85e5-a9d4cca614df/collection/45107124-61d04da9-2a17-4bad-a241-ba6a5774a352?action=share&source=collection_link&creator=45107124"
+	},
+	"item": [
+		{
+			"name": "Registro Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"El registro fue exitoso\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.message).to.include(\"registrado\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDE0IiwidW5pcXVlX25hbWUiOiJPU0NBUiBNQVJDRUxPIiwiYXBlbGxpZG8iOiJQSUNDT0xPIiwiZW1haWwiOiJvbTAxQGdtYWlsLmNvbSIsInJvbGUiOiJwcm9mZXNpb25hbCIsIkVzcGVjaWFsaWRhZCI6IlBzaWNvbG9nbyIsIm5iZiI6MTc0ODYyNjU0OCwiZXhwIjoxNzQ4NjMwMTQ4LCJpYXQiOjE3NDg2MjY1NDh9.MhwWVPcqqfJqrkyJXLSbx5V6Eg1lRl1rRQfRkX8-t7A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n  {\r\n  \r\n  \"nombre\": \"martin\",\r\n  \"apellido\": \"gonzalez\",\r\n  \"email\": \"mg@gmail.com\",\r\n  \"contraseña\": \"hola123\",\r\n  \"rol\": \"paciente\",\r\n  \"especialidad\":\"\"\r\n}\r\n\r\n\r\n\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5083/api/Auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5083",
+					"path": [
+						"api",
+						"Auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"if (jsonData.token) {\r",
+							"    pm.environment.set(\"token\", jsonData.token);\r",
+							"}\r",
+							"const response = pm.response.json(); \r",
+							"\r",
+							"if (response.token) {\r",
+							"    pm.environment.set(\"token\", response.token);\r",
+							"    console.log(\"Token guardado en variable de entorno.\");\r",
+							"} else {\r",
+							"    console.log(\"No se encontró token en la respuesta.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMDE0IiwidW5pcXVlX25hbWUiOiJPU0NBUiBNQVJDRUxPIiwiYXBlbGxpZG8iOiJQSUNDT0xPIiwiZW1haWwiOiJvbTAxQGdtYWlsLmNvbSIsInJvbGUiOiJwcm9mZXNpb25hbCIsIkVzcGVjaWFsaWRhZCI6IlBzaWNvbG9nbyIsIm5iZiI6MTc0ODYyNjU0OCwiZXhwIjoxNzQ4NjMwMTQ4LCJpYXQiOjE3NDg2MjY1NDh9.MhwWVPcqqfJqrkyJXLSbx5V6Eg1lRl1rRQfRkX8-t7A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n  {\r\n  \r\n  \"email\":\"ap1@gmail.com\",\r\n  \"contraseña\":\"1234\"\r\n}\r\n\r\n\r\n\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5083/api/Auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5083",
+					"path": [
+						"api",
+						"Auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disponibilidad Turnos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Disponibilidad creada correctamente\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().success).to.eql(true);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhbGVqYW5kcm8iLCJhcGVsbGlkbyI6InBpY2NvbG8iLCJlbWFpbCI6ImFwMUBnbWFpbC5jb20iLCJyb2xlIjoicHJvZmVzaW9uYWwiLCJFc3BlY2lhbGlkYWQiOiJUcmF1bWF0b2xvZ28iLCJuYmYiOjE3NTAyNTUxODMsImV4cCI6MTc1MDI1ODc4MywiaWF0IjoxNzUwMjU1MTgzfQ.2GpxPRCCOl9MmxjvM5-qP979Ga1NmFur2B_sOKSDhw0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n  \r\n  {\r\n  \"fechaHoraInicio\": \"2026-06-20T09:00:00\",\r\n  \"fechaHoraFin\": \"2026-06-20T09:30:00\",\r\n  \"duracion\": 30,\r\n  \"pacienteId\": null\r\n}\r\n \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5083/api/Disponibilidad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5083",
+					"path": [
+						"api",
+						"Disponibilidad"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Disponibilidad del profesional",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Disponibilidades disponibles obtenidas correctamente\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const body = pm.response.json();\r",
+							"    pm.expect(body).to.be.an(\"array\");\r",
+							"    pm.expect(body.length).to.be.greaterThan(0);\r",
+							"    pm.expect(body[0]).to.have.property(\"estado\", \"Disponible\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhbGVqYW5kcm8iLCJhcGVsbGlkbyI6InBpY2NvbG8iLCJlbWFpbCI6ImFwMUBnbWFpbC5jb20iLCJyb2xlIjoicHJvZmVzaW9uYWwiLCJFc3BlY2lhbGlkYWQiOiJUcmF1bWF0b2xvZ28iLCJuYmYiOjE3NTAyNTUxODMsImV4cCI6MTc1MDI1ODc4MywiaWF0IjoxNzUwMjU1MTgzfQ.2GpxPRCCOl9MmxjvM5-qP979Ga1NmFur2B_sOKSDhw0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5083/api/Disponibilidad/disponibles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5083",
+					"path": [
+						"api",
+						"Disponibilidad",
+						"disponibles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modificacion de estado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Estado HTTP es 200 OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Respuesta indica éxito\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensaje correcto de actualización\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Disponibilidad actualizada.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhbGVqYW5kcm8iLCJhcGVsbGlkbyI6InBpY2NvbG8iLCJlbWFpbCI6ImFwMUBnbWFpbC5jb20iLCJyb2xlIjoicHJvZmVzaW9uYWwiLCJFc3BlY2lhbGlkYWQiOiJUcmF1bWF0b2xvZ28iLCJuYmYiOjE3NTAyNTU3MzEsImV4cCI6MTc1MDI1OTMzMSwiaWF0IjoxNzUwMjU1NzMxfQ.JiAGQeb_gA3deXsRDueVDsWEsjZXSrNsK3Usdwc83KI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 3,\r\n  \"fechaHoraInicio\": \"2025-06-20T09:00:00\",\r\n  \"fechaHoraFin\": \"2025-06-20T09:30:00\",\r\n  \"duracion\": 30,\r\n  \"profesionalId\": 1,\r\n  \"estado\": \"Reservado\",\r\n  \"pacienteId\": 2\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5083/api/Disponibilidad/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5083",
+					"path": [
+						"api",
+						"Disponibilidad",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eliminar turno",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 204\", () => {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Respuesta indica éxito\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhbGVqYW5kcm8iLCJhcGVsbGlkbyI6InBpY2NvbG8iLCJlbWFpbCI6ImFwMUBnbWFpbC5jb20iLCJyb2xlIjoicHJvZmVzaW9uYWwiLCJFc3BlY2lhbGlkYWQiOiJUcmF1bWF0b2xvZ28iLCJuYmYiOjE3NTAyNTUxODMsImV4cCI6MTc1MDI1ODc4MywiaWF0IjoxNzUwMjU1MTgzfQ.2GpxPRCCOl9MmxjvM5-qP979Ga1NmFur2B_sOKSDhw0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5083/api/Disponibilidad/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5083",
+					"path": [
+						"api",
+						"Disponibilidad",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

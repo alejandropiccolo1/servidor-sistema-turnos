@@ -1,4 +1,5 @@
 using reservabackend.Models;
+using ReservasBackend.Dtos;
 using ReservasBackend.Repositories;
 
 namespace ReservasBackend.Services
@@ -6,11 +7,12 @@ namespace ReservasBackend.Services
     public class DisponibilidadService : IDisponibilidadService
     {
         private readonly IDisponibilidadRepository _repositorio;
+        private readonly IUserRepository _userRepository;
 
-
-        public DisponibilidadService(IDisponibilidadRepository repositorio)
+        public DisponibilidadService(IDisponibilidadRepository repositorio, IUserRepository userRepository)
         {
             _repositorio = repositorio;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<Disponibilidad>> ObtenerTodasAsync()
@@ -107,9 +109,31 @@ namespace ReservasBackend.Services
             return turnos.Count(t => t.Estado == "Disponible");
         }
 
-        public async Task<IEnumerable<Disponibilidad>> ObtenerDisponiblesAsync()
+        public async Task<List<DisponibilidadDto>> ObtenerDisponiblesAsync()
         {
-            return await _repositorio.ObtenerDisponiblesAsync();
+            var disponibles = await _repositorio.ObtenerDisponiblesAsync();
+
+            List<DisponibilidadDto> listDisponibilidad = new List<DisponibilidadDto>();
+
+            foreach (var disponible in disponibles)
+            {
+                Usuario profesional = await _userRepository.GetById(disponible.ProfesionalId);
+
+                DisponibilidadDto dto = new DisponibilidadDto()
+                {
+                    Id = disponible.Id,
+                    FechaHoraInicio = disponible.FechaHoraInicio,
+                    FechaHoraFin = disponible.FechaHoraFin,
+                    Estado = disponible.Estado,
+                    NombreProfesional = profesional.Nombre,
+                    ApellidoProfesional = profesional.Apellido,
+                    Especialidad = profesional.Especialidad
+                };
+
+                listDisponibilidad.Add(dto);
+            }
+
+            return listDisponibilidad;
         }
         
         public async Task<IEnumerable<Disponibilidad>> ObtenerPorPacienteAsync(int pacienteId)

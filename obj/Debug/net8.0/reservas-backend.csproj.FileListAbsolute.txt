@@ -169,3 +169,4 @@ C:\Users\aleep\reservas-backend\obj\Debug\net8.0\refint\reservas-backend.dll
 C:\Users\aleep\reservas-backend\obj\Debug\net8.0\reservas-backend.pdb
 C:\Users\aleep\reservas-backend\obj\Debug\net8.0\reservas-backend.genruntimeconfig.cache
 C:\Users\aleep\reservas-backend\obj\Debug\net8.0\ref\reservas-backend.dll
+C:\Users\aleep\reservas-backend\bin\Debug\net8.0\Pruebas_Api_Turnero.postman_collection.json
