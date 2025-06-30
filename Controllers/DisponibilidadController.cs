@@ -136,11 +136,19 @@ namespace ReservasBackend.Controllers
             return Ok("Turno cancelado correctamente.");
         }
         [HttpPut("reservar/{disponibilidadId}")]
-        public async Task<IActionResult> ReservarTurno(int disponibilidadId, [FromBody] int pacienteId)
-        {
-        bool reservado = await _disponibilidadService.ReservarTurnoAsync(disponibilidadId, pacienteId);
+        [Authorize(Roles = "paciente")]
+         public async Task<IActionResult> ReservarTurno(int disponibilidadId)
+    {
+         // 1) Obtener el pacienteId desde el token:
+         var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+            return Unauthorized("Token inválido o sin identificador de usuario.");
+            int pacienteId = int.Parse(claim.Value);
+
+            // 2) Llamar al servicio:
+            bool reservado = await _disponibilidadService.ReservarTurnoAsync(disponibilidadId, pacienteId);
         if (!reservado)
-        return BadRequest("No se pudo reservar el turno. Verificar disponibilidad.");
+        return BadRequest("No se pudo reservar el turno. Puede que ya no esté disponible.");
 
         return Ok("Turno reservado correctamente.");
         }
